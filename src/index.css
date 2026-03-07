@@ -1,1 +1,85 @@
 @import "tailwindcss";
+
+/* Global Styles */
+
+body{
+background:#0f172a;
+color:#e2e8f0;
+font-family: 'Inter', sans-serif;
+margin:0;
+padding:0;
+}
+
+/* Container spacing */
+
+.section{
+padding:80px 40px;
+}
+
+/* Form Inputs */
+
+.input{
+width:100%;
+margin-bottom:14px;
+padding:12px 14px;
+background:#1e293b;
+border-radius:8px;
+border:1px solid #334155;
+color:#e2e8f0;
+outline:none;
+transition:0.3s;
+}
+
+.input:focus{
+border-color:#ec4899;
+box-shadow:0 0 0 2px rgba(236,72,153,0.3);
+}
+
+/* Buttons */
+
+.btn-primary{
+background:linear-gradient(135deg,#ec4899,#db2777);
+padding:12px 20px;
+border-radius:8px;
+color:white;
+font-weight:600;
+transition:0.3s;
+}
+
+.btn-primary:hover{
+transform:scale(1.05);
+box-shadow:0 10px 20px rgba(236,72,153,0.3);
+}
+
+/* Card Design */
+
+.card{
+background:#1e293b;
+border-radius:12px;
+padding:20px;
+border:1px solid #334155;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Section Title */
+
+.title{
+font-size:36px;
+font-weight:700;
+text-align:center;
+margin-bottom:40px;
+}
+
+/* Form Container */
+
+.form-box{
+background:#1e293b;
+padding:30px;
+border-radius:12px;
+border:1px solid #334155;
+}
