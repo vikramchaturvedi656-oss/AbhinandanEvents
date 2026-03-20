@@ -1,14 +1,15 @@
+// mailtrap/mailtrap.config.js
 import { MailtrapClient } from "mailtrap";
 
-// Ensure the token is provided
+// Ensure the Mailtrap token is provided
 if (!process.env.MAILTRAP_TOKEN) {
   console.warn(
     "⚠️ MAILTRAP_TOKEN is not set. Emails will not be sent. " +
-    "Set MAILTRAP_TOKEN in your .env file."
+    "Please set MAILTRAP_TOKEN in your .env file."
   );
 }
 
-// Create a Mailtrap client
+// Initialize the Mailtrap client
 const client = new MailtrapClient({
   token: process.env.MAILTRAP_TOKEN,
 });
