@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_ORIGIN } from "../utils/config";
 
 function VendorRegister() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ function VendorRegister() {
       });
 
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/vendor/register`,
+        `${API_ORIGIN}/api/vendor/register`,
         {
           method: "POST",
           body: payload

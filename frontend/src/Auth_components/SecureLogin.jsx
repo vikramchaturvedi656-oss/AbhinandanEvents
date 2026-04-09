@@ -1,49 +1,41 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../utils/config";
+import { getDashboardPath } from "../utils/session";
 
-function Login() {
+function SecureLogin() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     loginType: "Client",
   });
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ✅ Redirect if already logged in
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("ae_user");
+
       if (storedUser) {
-        navigate("/profile"); // 🔥 unified redirect
+        const user = JSON.parse(storedUser);
+        navigate(getDashboardPath(user.role));
       }
     } catch {
       localStorage.removeItem("ae_user");
     }
   }, [navigate]);
 
-  // ✅ Handle input
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
+  const handleChange = (event) => {
+    setFormData((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
     }));
     setError("");
   };
 
-  // ✅ Extract user safely (handles different backend formats)
-  const extractUser = (data) => {
-    if (data.user) return data.user;   // case: { user: {...} }
-    return data;                       // case: {...user fields directly}
-  };
-
-  // ✅ Submit login
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
 
     if (!formData.email || !formData.password) {
@@ -64,46 +56,39 @@ function Login() {
         role: formData.loginType,
       };
 
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      console.log("Login response:", data); // 🔍 DEBUG
-
-      if (!res.ok) {
+      if (!response.ok) {
         setError(data.message || "Login failed.");
         return;
       }
 
-      // ✅ Extract correct user structure
-      const user = extractUser(data);
+      const user = data.user || data;
 
-      if (!user || !user.email) {
+      if (!user?.email) {
         setError("Invalid user data received from server.");
         return;
       }
 
-      // ✅ Store data
       localStorage.setItem("ae_user", JSON.stringify(user));
 
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
 
-      // ✅ Notify navbar
       window.dispatchEvent(new Event("userLogin"));
-
-      // ✅ Redirect to profile (clean UX)
-      navigate("/profile");
-
-    } catch (err) {
-      console.error("Login error:", err);
+      navigate(getDashboardPath(user.role));
+    } catch (error) {
+      console.error("Login error:", error);
       setError("Server error. Please try again later.");
     } finally {
       setLoading(false);
@@ -111,21 +96,19 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#0f172a]">
-      <div className="bg-[#1e293b] p-10 rounded-xl w-[420px] shadow-xl">
-
-        <h2 className="text-2xl text-white font-bold mb-6 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-[#0f172a] px-4">
+      <div className="w-full max-w-md rounded-2xl bg-[#1e293b] p-10 shadow-xl">
+        <h2 className="mb-6 text-center text-2xl font-bold text-white">
           Login to Abhinandan Events
         </h2>
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-400 text-sm px-4 py-3 rounded-lg mb-4">
+          <div className="mb-4 rounded-lg border border-red-500 bg-red-500/20 px-4 py-3 text-sm text-red-300">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <input
             className="input w-full"
             type="email"
@@ -155,26 +138,29 @@ function Login() {
             <option value="Admin">Admin</option>
           </select>
 
+          <p className="text-xs text-slate-400">
+            Admin login works only for the approved admin email accounts seeded on
+            the server.
+          </p>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-pink-500 py-3 rounded-lg text-white font-semibold hover:bg-pink-600 disabled:opacity-50 transition"
+            className="w-full rounded-lg bg-pink-500 py-3 font-semibold text-white transition hover:bg-pink-600 disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
 
-        <p className="text-gray-400 mt-5 text-center text-sm">
+        <p className="mt-5 text-center text-sm text-gray-400">
           Don't have an account?{" "}
           <Link to="/signup" className="text-pink-400 hover:underline">
             Sign Up
           </Link>
         </p>
-
       </div>
     </div>
   );
 }
 
-export default Login;
+export default SecureLogin;

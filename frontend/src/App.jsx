@@ -1,60 +1,68 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 
-// Components
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-
-// Pages
-import Home from "./Pages/Home";
+import SiteNavbar from "./components/SiteNavbar";
+import SiteFooter from "./components/SiteFooter";
+import MainHome from "./Pages/MainHome";
+import MarketplaceHome from "./Pages/MarketplaceHome";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import EventDetail from "./Pages/EventDetail";
+import UserProfile from "./Pages/UserProfile";
+import Login from "./Auth_components/SecureLogin";
+import Signup from "./Auth_components/SecureSignup";
+import VendorRegister from "./Auth_components/VendorRegister";
+import UserDashboard from "./Pages/UserDashboard";
+import PlannerOpsDashboard from "./Pages/PlannerOpsDashboard";
+import AdminControlPanel from "./Pages/AdminControlPanel";
+import { getDashboardPath, getStoredUser } from "./utils/session";
 
-// Authentication
-import Login from "./auth_components/Login";
-import Signup from "./auth_components/Signup";
-import VendorRegister from "./auth_components/VendorRegister";
+function DashboardRedirect() {
+  const user = getStoredUser();
 
-// Dashboards
-import ClientDashboard from "./Dashboard/ClientDashboard";
-import PlannerDashboard from "./Dashboard/PlannerDashboard";
-import AdminDashboard from "./Dashboard/AdminDashboard";
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Navigate to={getDashboardPath(user.role)} replace />;
+}
+
+function AdminRoute() {
+  const user = getStoredUser();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user.role !== "Admin") {
+    return <Navigate to={getDashboardPath(user.role)} replace />;
+  }
+
+  return <AdminControlPanel />;
+}
 
 function App() {
   return (
     <Router>
-
-      {/* Top Navigation */}
-      <Navbar />
-
-      {/* Main Pages */}
-      <div className="min-h-screen">
-
+      <SiteNavbar />
+      <div className="min-h-screen bg-slate-950 text-slate-50">
         <Routes>
-
-          {/* Public Pages */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<MainHome />} />
+          <Route path="/marketplace" element={<MarketplaceHome />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-
-          {/* Authentication */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/vendor-register" element={<VendorRegister />} />
-
-          {/* Dashboards */}
-          <Route path="/client-dashboard" element={<ClientDashboard />} />
-          <Route path="/planner-dashboard" element={<PlannerDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/dashboard" element={<DashboardRedirect />} />
+          <Route path="/client-dashboard" element={<UserDashboard />} />
+          <Route path="/planner-dashboard" element={<PlannerOpsDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminRoute />} />
           <Route path="/events/:slug" element={<EventDetail />} />
-
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-
       </div>
-
-      {/* Footer */}
-      <Footer />
-
+      <SiteFooter />
     </Router>
   );
 }

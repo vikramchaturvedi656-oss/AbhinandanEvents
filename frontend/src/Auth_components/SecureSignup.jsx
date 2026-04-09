@@ -2,34 +2,34 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../utils/config";
 
-function Signup() {
+function SecureSignup() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
-    role: "Client" // 🔥 NEW
+    role: "Client",
   });
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (event) => {
+    setFormData((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
     setError("");
     setSuccess("");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
     setSuccess("");
 
-    // 🔥 VALIDATION
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -43,21 +43,22 @@ function Signup() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/signup`, {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
           password: formData.password,
-          role: formData.role // 🔥 SEND ROLE
-        })
+          role: formData.role,
+        }),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) {
+      if (!response.ok) {
         setError(data.message || "Signup failed. Please try again.");
         return;
       }
@@ -66,9 +67,8 @@ function Signup() {
 
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
-
-    } catch (err) {
+      }, 1500);
+    } catch {
       setError("Server error. Please try again later.");
     } finally {
       setLoading(false);
@@ -76,27 +76,23 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-white">
-      <div className="bg-[#1e293b] p-10 rounded-xl w-[400px] shadow-lg">
-
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Create Account
-        </h2>
+    <div className="flex min-h-screen items-center justify-center bg-[#0f172a] px-4 text-white">
+      <div className="w-full max-w-md rounded-2xl bg-[#1e293b] p-10 shadow-xl">
+        <h2 className="mb-6 text-center text-3xl font-bold">Create Account</h2>
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-400 text-sm px-4 py-3 rounded-lg mb-4">
+          <div className="mb-4 rounded-lg border border-red-500 bg-red-500/20 px-4 py-3 text-sm text-red-300">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-500/20 border border-green-500 text-green-400 text-sm px-4 py-3 rounded-lg mb-4">
+          <div className="mb-4 rounded-lg border border-emerald-500 bg-emerald-500/20 px-4 py-3 text-sm text-emerald-300">
             {success}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-
           <input
             type="text"
             name="name"
@@ -106,7 +102,6 @@ function Signup() {
             onChange={handleChange}
             required
           />
-
           <input
             type="email"
             name="email"
@@ -116,7 +111,6 @@ function Signup() {
             onChange={handleChange}
             required
           />
-
           <input
             type="tel"
             name="phone"
@@ -126,8 +120,6 @@ function Signup() {
             onChange={handleChange}
             required
           />
-
-          {/* 🔥 ROLE SELECT */}
           <select
             name="role"
             className="input"
@@ -136,9 +128,10 @@ function Signup() {
           >
             <option value="Client">Client</option>
             <option value="Vendor">Vendor</option>
-            <option value="Admin">Admin</option>
           </select>
-
+          <p className="mb-3 text-xs text-gray-400">
+            Admin accounts are private and can only be created from the server.
+          </p>
           <input
             type="password"
             name="password"
@@ -148,7 +141,6 @@ function Signup() {
             onChange={handleChange}
             required
           />
-
           <input
             type="password"
             name="confirmPassword"
@@ -158,25 +150,24 @@ function Signup() {
             onChange={handleChange}
             required
           />
-
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-pink-500 hover:bg-pink-600 py-3 rounded-lg mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 w-full rounded-lg bg-pink-500 py-3 font-semibold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
-
         </form>
 
-        <p className="text-gray-400 text-sm text-center mt-4">
+        <p className="mt-4 text-center text-sm text-gray-400">
           Already have an account?{" "}
-          <Link to="/login" className="text-pink-400">Login</Link>
+          <Link to="/login" className="text-pink-400 hover:underline">
+            Login
+          </Link>
         </p>
-
       </div>
     </div>
   );
 }
 
-export default Signup;
+export default SecureSignup;

@@ -2,17 +2,36 @@ import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
-
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     permissions: [
       {
         type: String,
-        enum: ["MANAGE_USERS", "MANAGE_VENDORS"],
+        enum: ["MANAGE_USERS", "MANAGE_VENDORS", "MANAGE_ADMINS"],
       },
     ],
   },

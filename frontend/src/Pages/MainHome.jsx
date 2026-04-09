@@ -1,20 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  FaStar,
-  FaSearch,
   FaCalendarCheck,
-  FaShieldAlt,
-  FaMobileAlt,
   FaChartLine,
   FaComments,
-  FaWallet,
   FaGlobe,
   FaLightbulb,
+  FaMobileAlt,
+  FaSearch,
+  FaShieldAlt,
+  FaStar,
+  FaWallet,
 } from "react-icons/fa";
+import PlannerMarketplaceSection from "../components/PlannerMarketplaceSection";
 import eventCategories from "../data/eventCategories";
-
-// ─── Static data ────────────────────────────────────────────────────────────
 
 const stats = [
   {
@@ -34,7 +33,7 @@ const stats = [
 const pillars = [
   {
     title: "Centralized planning",
-    copy: "One workspace to discover venues, catering, decor, photography, entertainment, transport, and more - no more juggling tabs and chats.",
+    copy: "One workspace to discover venues, catering, decor, photography, entertainment, transport, and more, without juggling tabs and chats.",
   },
   {
     title: "Transparent by default",
@@ -45,39 +44,39 @@ const pillars = [
     copy: "Structured booking statuses, reminders, and a shared event calendar cut manual follow-ups and miscommunication.",
   },
   {
-    title: "Local & accessible",
+    title: "Local and accessible",
     copy: "Gives local providers a digital storefront and helps every budget find quality options without compromise.",
   },
 ];
 
 const features = [
   {
-    icon: <FaSearch className="text-amber-400 text-xl" />,
+    icon: <FaSearch className="text-xl text-amber-400" />,
     title: "Curated vendor discovery",
-    copy: "Filter by city, budget, date, and event type; compare side-by-side with portfolios and real photos.",
+    copy: "Filter by city, budget, date, and event type, then compare side-by-side with portfolios and real photos.",
   },
   {
-    icon: <FaShieldAlt className="text-emerald-400 text-xl" />,
-    title: "Verified profiles & reviews",
+    icon: <FaShieldAlt className="text-xl text-emerald-400" />,
+    title: "Verified profiles and reviews",
     copy: "Identity checks, work samples, and verified booking reviews ensure trust where 92% of users look first.",
   },
   {
-    icon: <FaCalendarCheck className="text-sky-400 text-xl" />,
-    title: "Booking & coordination",
+    icon: <FaCalendarCheck className="text-xl text-sky-400" />,
+    title: "Booking and coordination",
     copy: "Automated status tracking, reminders, and shared timelines reduce miscommunication by 43% (research).",
   },
   {
-    icon: <FaWallet className="text-rose-400 text-xl" />,
+    icon: <FaWallet className="text-xl text-rose-400" />,
     title: "Budget clarity",
     copy: "Upfront package breakdowns, expense tracking, and add-on visibility keep spending predictable.",
   },
   {
-    icon: <FaChartLine className="text-indigo-400 text-xl" />,
-    title: "Dashboards & analytics",
-    copy: "Clients see booking progress; vendors see demand, conversion, and revenue insights to refine offerings.",
+    icon: <FaChartLine className="text-xl text-indigo-400" />,
+    title: "Dashboards and analytics",
+    copy: "Clients see booking progress while vendors see demand, conversion, and revenue insights.",
   },
   {
-    icon: <FaComments className="text-lime-300 text-xl" />,
+    icon: <FaComments className="text-xl text-lime-300" />,
     title: "Communication hub",
     copy: "Message vendors, share inspiration, and keep quote threads and documents in one searchable place.",
   },
@@ -86,7 +85,7 @@ const features = [
 const roadmap = [
   {
     icon: <FaMobileAlt className="text-amber-400" />,
-    title: "Mobile apps (iOS & Android)",
+    title: "Mobile apps (iOS and Android)",
     copy: "React Native build for push updates, on-the-go approvals, and quick photo uploads.",
   },
   {
@@ -101,7 +100,7 @@ const roadmap = [
   },
   {
     icon: <FaWallet className="text-indigo-300" />,
-    title: "Payments & escrow",
+    title: "Payments and escrow",
     copy: "Secure deposits, milestone releases, receipts, and multi-method payments in one flow.",
   },
   {
@@ -111,7 +110,7 @@ const roadmap = [
   },
   {
     icon: <FaGlobe className="text-lime-300" />,
-    title: "Virtual & hybrid experiences",
+    title: "Virtual and hybrid experiences",
     copy: "Live streaming hooks and virtual venue tours to keep remote guests fully included.",
   },
 ];
@@ -134,33 +133,7 @@ const testimonials = [
   },
 ];
 
-const Home = () => {
-  const navigate = useNavigate();
-
-  // ── Auth state ──────────────────────────────────────────────────────────────
-  // Reads the logged-in user from localStorage.
-  // In your Login page, after a successful login, save the user like this:
-  //
-  //   localStorage.setItem("ae_user", JSON.stringify({ name: "Ananya", email: "a@example.com" }));
-  //   navigate("/");
-  //
-  // On logout we remove it and redirect to home.
-  const [user, setUser] = useState(() => {
-    try {
-      const stored = localStorage.getItem("ae_user");
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  });
-
-  const handleLogout = () => {
-    localStorage.removeItem("ae_user");
-    setUser(null);
-    navigate("/");
-  };
-
-  // ── Request form state ──────────────────────────────────────────────────────
+function MainHome() {
   const [requestData, setRequestData] = useState({
     name: "",
     email: "",
@@ -173,17 +146,15 @@ const Home = () => {
   });
   const [formStatus, setFormStatus] = useState("");
 
-  const handleInputChange = (field) => (e) =>
-    setRequestData((prev) => ({ ...prev, [field]: e.target.value }));
+  const handleInputChange = (field) => (event) =>
+    setRequestData((prev) => ({ ...prev, [field]: event.target.value }));
 
   const handleSelectService = (service) => {
     setRequestData((prev) => ({ ...prev, eventType: service }));
-    const form = document.getElementById("request-form");
-    if (form) form.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     setFormStatus(
       `Thanks! We received your request for ${
         requestData.eventType || "an event"
@@ -203,11 +174,6 @@ const Home = () => {
 
   return (
     <div className="bg-slate-950 text-slate-50">
-
-      {/* ── Sticky Navbar ── */}
-      
-
-      {/* HERO — pt-16 pushes content below the fixed navbar */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -218,38 +184,45 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950/80 to-slate-900" />
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-28">
-          <p className="uppercase tracking-[0.3em] text-xs text-amber-300 mb-4">
-            Abhinandan Events | Built on React, Node, Express & MongoDB
+        <div className="relative mx-auto max-w-6xl px-6 py-20 lg:py-28">
+          <p className="mb-4 text-xs uppercase tracking-[0.3em] text-amber-300">
+            Abhinandan Events | Home + Marketplace Combined
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">
-            Centralized, transparent event planning for weddings, corporate
-            functions, and every celebration in between.
+          <h1 className="max-w-4xl text-4xl font-bold leading-tight md:text-5xl">
+            Centralized, transparent event planning with the full homepage and
+            the newer booking experience together.
           </h1>
-          <p className="mt-5 text-lg text-slate-200/90 max-w-3xl">
-            Discover, compare, and book trusted vendors with guided workflows,
-            transparent pricing, and coordinated schedules - all in a single
-            platform designed to cut stress and save time.
+          <p className="mt-5 max-w-3xl text-lg text-slate-200/90">
+            Explore event cards, compare planners, request services, and keep
+            the updated live-booking flow on the same home page.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link to="/signup">
-              <button className="bg-gradient-to-r from-amber-500 via-rose-500 to-fuchsia-500 px-6 py-3 rounded-lg font-semibold shadow-lg shadow-rose-900/30 hover:translate-y-[-2px] transition">
-                Plan my event
-              </button>
+            <a
+              href="#planner-marketplace"
+              className="rounded-lg bg-gradient-to-r from-amber-500 via-rose-500 to-fuchsia-500 px-6 py-3 font-semibold shadow-lg shadow-rose-900/30 transition hover:-translate-y-[2px]"
+            >
+              Explore planner cards
+            </a>
+            <Link
+              to="/signup"
+              className="rounded-lg border border-white/20 px-6 py-3 font-semibold transition hover:border-amber-400 hover:text-amber-200"
+            >
+              Plan my event
             </Link>
-            <Link to="/vendor-register">
-              <button className="border border-white/20 px-6 py-3 rounded-lg font-semibold hover:border-amber-400 hover:text-amber-200 transition">
-                List my business
-              </button>
+            <Link
+              to="/vendor-register"
+              className="rounded-lg border border-white/20 px-6 py-3 font-semibold transition hover:border-amber-400 hover:text-amber-200"
+            >
+              List my business
             </Link>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-3 gap-4">
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
             {stats.map((item) => (
               <div
                 key={item.label}
-                className="bg-white/5 backdrop-blur rounded-lg p-4 border border-white/10"
+                className="rounded-lg border border-white/10 bg-white/5 p-4 backdrop-blur"
               >
                 <p className="text-3xl font-bold text-amber-300">{item.value}</p>
                 <p className="text-sm text-slate-200/80">{item.label}</p>
@@ -259,22 +232,21 @@ const Home = () => {
         </div>
       </section>
 
-      {/* VALUE PILLARS */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-3xl font-bold">Why organizers choose us</h2>
-          <span className="text-xs uppercase tracking-[0.2em] bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-200">
-            Based on Jan 29, 2026 product report
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-200">
+            Restored homepage sections
           </span>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {pillars.map((pillar) => (
             <div
               key={pillar.title}
-              className="bg-slate-900/70 border border-white/10 rounded-xl p-5 shadow-lg shadow-black/30"
+              className="rounded-xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/30"
             >
-              <h3 className="text-xl font-semibold mb-3 text-amber-200">
+              <h3 className="mb-3 text-xl font-semibold text-amber-200">
                 {pillar.title}
               </h3>
               <p className="text-sm text-slate-200/80">{pillar.copy}</p>
@@ -283,18 +255,17 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section className="bg-slate-900/50 border-y border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+      <section className="border-y border-white/5 bg-slate-900/50">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
                 Platform
               </p>
-              <h2 className="text-3xl font-bold mt-2">Built-in capabilities</h2>
-              <p className="text-slate-200/80 mt-2 max-w-3xl">
+              <h2 className="mt-2 text-3xl font-bold">Built-in capabilities</h2>
+              <p className="mt-2 max-w-3xl text-slate-200/80">
                 Vendor discovery, booking, budgeting, and communication live in
-                the same flow - no extra tabs, no fragmented threads.
+                the same flow with the home content restored.
               </p>
             </div>
             <div className="text-sm text-slate-300">
@@ -303,14 +274,14 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <div
                 key={feature.title}
                 className="rounded-xl border border-white/10 bg-slate-950/60 p-5 shadow-lg shadow-black/25"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-white/5 rounded-full p-3">{feature.icon}</div>
+                  <div className="rounded-full bg-white/5 p-3">{feature.icon}</div>
                   <h3 className="text-lg font-semibold">{feature.title}</h3>
                 </div>
                 <p className="mt-3 text-sm text-slate-200/80">{feature.copy}</p>
@@ -320,25 +291,24 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CATEGORIES */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
               Coverage
             </p>
-            <h2 className="text-3xl font-bold mt-2">Events we excel at</h2>
-            <p className="text-slate-200/80 mt-2">
-              From intimate socials to enterprise-scale gatherings, curated
-              vendors stay coordinated in one dashboard.
+            <h2 className="mt-2 text-3xl font-bold">Events we excel at</h2>
+            <p className="mt-2 text-slate-200/80">
+              Event cards are back on the home page so users can browse before
+              booking.
             </p>
           </div>
-          <Link to="/signup" className="text-amber-200 text-sm underline">
-            Start a plan -&gt;
-          </Link>
+          <a href="#planner-marketplace" className="text-sm text-amber-200 underline">
+            Jump to planner booking
+          </a>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {eventCategories.map((category) => (
             <Link
               key={category.slug}
@@ -346,7 +316,7 @@ const Home = () => {
               className="group"
               onClick={() => handleSelectService(category.name)}
             >
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-lg shadow-black/30 transition transform group-hover:-translate-y-1">
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-lg shadow-black/30 transition group-hover:-translate-y-1">
                 <img
                   src={category.image}
                   alt={category.name}
@@ -357,7 +327,7 @@ const Home = () => {
                     <h3 className="text-xl font-semibold">{category.name}</h3>
                     <FaStar className="text-amber-300" />
                   </div>
-                  <p className="text-sm text-slate-200/80 mt-2">
+                  <p className="mt-2 text-sm text-slate-200/80">
                     {category.desc}
                   </p>
                   <ul className="mt-3 space-y-2 text-xs text-slate-200/80">
@@ -368,8 +338,8 @@ const Home = () => {
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-4 w-full rounded-lg border border-amber-300/60 text-amber-200 px-4 py-2 font-semibold text-center hover:bg-amber-500 hover:text-slate-900 transition">
-                    View details & request
+                  <div className="mt-4 rounded-lg border border-amber-300/60 px-4 py-2 text-center font-semibold text-amber-200 transition hover:bg-amber-500 hover:text-slate-900">
+                    View details and request
                   </div>
                 </div>
               </div>
@@ -378,30 +348,26 @@ const Home = () => {
         </div>
       </section>
 
-      {/* REQUEST SERVICE */}
-      <section
-        id="request-form"
-        className="bg-slate-900/50 border-y border-white/5"
-      >
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid lg:grid-cols-2 gap-10 items-start">
+      <PlannerMarketplaceSection />
+
+      <section id="request-form" className="border-y border-white/5 bg-slate-900/50">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="grid items-start gap-10 lg:grid-cols-2">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
                 Request
               </p>
-              <h2 className="text-3xl font-bold mt-2">
-                Tell us about your event
-              </h2>
-              <p className="text-slate-200/80 mt-2">
+              <h2 className="mt-2 text-3xl font-bold">Tell us about your event</h2>
+              <p className="mt-2 text-slate-200/80">
                 Share your details and we will respond with a curated vendor
                 shortlist, transparent packages, and a coordinated timeline.
               </p>
 
               <form
                 onSubmit={handleSubmit}
-                className="mt-6 space-y-4 bg-slate-950/60 border border-white/10 rounded-xl p-5 shadow-lg shadow-black/25"
+                className="mt-6 space-y-4 rounded-xl border border-white/10 bg-slate-950/60 p-5 shadow-lg shadow-black/25"
               >
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <input
                     required
                     type="text"
@@ -420,7 +386,7 @@ const Home = () => {
                   />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <input
                     type="tel"
                     placeholder="Phone"
@@ -444,7 +410,7 @@ const Home = () => {
                   </select>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <input
                     type="date"
                     value={requestData.date}
@@ -462,7 +428,7 @@ const Home = () => {
 
                 <input
                   type="text"
-                  placeholder="Budget range (e.g., $10k - $15k)"
+                  placeholder="Budget range (e.g., INR 50K - 1L)"
                   value={requestData.budget}
                   onChange={handleInputChange("budget")}
                   className="w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-50 focus:border-amber-400 focus:outline-none"
@@ -478,18 +444,16 @@ const Home = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-amber-500 via-rose-500 to-fuchsia-600 rounded-lg py-3 font-semibold shadow-lg shadow-rose-900/30 hover:translate-y-[-1px] transition"
+                  className="w-full rounded-lg bg-gradient-to-r from-amber-500 via-rose-500 to-fuchsia-600 py-3 font-semibold shadow-lg shadow-rose-900/30 transition hover:-translate-y-[1px]"
                 >
                   Send request
                 </button>
 
-                {formStatus && (
-                  <p className="text-sm text-emerald-300">{formStatus}</p>
-                )}
+                {formStatus && <p className="text-sm text-emerald-300">{formStatus}</p>}
               </form>
             </div>
 
-            <div className="bg-slate-950/60 border border-white/10 rounded-2xl p-6 shadow-lg shadow-black/25 space-y-5">
+            <div className="space-y-5 rounded-2xl border border-white/10 bg-slate-950/60 p-6 shadow-lg shadow-black/25">
               <h3 className="text-xl font-semibold">What happens next</h3>
               <ul className="space-y-3 text-sm text-slate-200/90">
                 <li className="flex gap-3">
@@ -512,7 +476,7 @@ const Home = () => {
                 </li>
               </ul>
 
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <p className="text-2xl font-bold text-amber-300">24h</p>
                   <p className="text-xs text-slate-200/80">Shortlist turnaround</p>
@@ -520,7 +484,7 @@ const Home = () => {
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <p className="text-2xl font-bold text-amber-300">Transparent</p>
                   <p className="text-xs text-slate-200/80">
-                    Upfront pricing & packages
+                    Upfront pricing and packages
                   </p>
                 </div>
               </div>
@@ -536,84 +500,80 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ROADMAP */}
-      <section className="bg-slate-900/50 border-y border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
+      <section className="border-y border-white/5 bg-slate-900/50">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-3xl font-bold">Roadmap highlights</h2>
             <span className="text-xs text-slate-300">
               Upcoming releases prioritized by user feedback
             </span>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {roadmap.map((item) => (
               <div
                 key={item.title}
                 className="rounded-xl border border-white/10 bg-slate-950/60 p-5 shadow-lg shadow-black/25"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-white/5 rounded-full p-3">{item.icon}</div>
+                  <div className="rounded-full bg-white/5 p-3">{item.icon}</div>
                   <h3 className="text-lg font-semibold">{item.title}</h3>
                 </div>
-                <p className="text-sm text-slate-200/80 mt-3">{item.copy}</p>
+                <p className="mt-3 text-sm text-slate-200/80">{item.copy}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-3xl font-bold">What our community says</h2>
           <span className="text-sm text-slate-300">
             Verified after completed bookings
           </span>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
           {testimonials.map((item) => (
             <div
               key={item.name}
-              className="bg-slate-900/70 border border-white/10 rounded-xl p-5 shadow-lg shadow-black/30"
+              className="rounded-xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/30"
             >
-              <p className="text-slate-100 text-sm leading-relaxed">
-                {item.quote}
-              </p>
-              <p className="text-amber-200 font-semibold mt-4">{item.name}</p>
+              <p className="text-sm leading-relaxed text-slate-100">{item.quote}</p>
+              <p className="mt-4 font-semibold text-amber-200">{item.name}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
       <section className="bg-gradient-to-r from-amber-500 via-rose-500 to-fuchsia-600 text-slate-50">
-        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold">
+        <div className="mx-auto max-w-6xl px-6 py-16 text-center">
+          <h2 className="text-3xl font-bold md:text-4xl">
             Ready to plan without the chaos?
           </h2>
-          <p className="text-lg mt-3 max-w-3xl mx-auto">
+          <p className="mx-auto mt-3 max-w-3xl text-lg">
             Join Abhinandan Events to centralize vendor discovery, pricing
-            clarity, and coordination. Built for stress-free weddings, corporate
-            events, concerts, and celebrations.
+            clarity, coordination, and live planner booking.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link to="/signup">
-              <button className="bg-slate-950 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-900 transition">
-                Create client account
-              </button>
+            <Link
+              to="/signup"
+              className="rounded-lg bg-slate-950 px-6 py-3 font-semibold text-white transition hover:bg-slate-900"
+            >
+              Create client account
             </Link>
-            <Link to="/vendor-register">
-              <button className="bg-white text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-slate-100 transition">
-                Become a vendor partner
-              </button>
+            <Link
+              to="/vendor-register"
+              className="rounded-lg bg-white px-6 py-3 font-semibold text-slate-900 transition hover:bg-slate-100"
+            >
+              Become a vendor partner
             </Link>
           </div>
         </div>
       </section>
     </div>
   );
-};
+}
 
-export default Home;
+export default MainHome;
