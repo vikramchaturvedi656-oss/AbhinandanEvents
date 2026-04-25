@@ -285,12 +285,12 @@ function EventDetail() {
           <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950/80 to-slate-900" />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-6 py-20 lg:py-24">
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
           <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
             Event Details
           </p>
-          <h1 className="mt-2 text-4xl font-bold md:text-5xl">{event.name}</h1>
-          <p className="mt-4 max-w-3xl text-lg text-slate-200/90">{event.desc}</p>
+          <h1 className="mt-2 text-3xl font-bold sm:text-4xl md:text-5xl">{event.name}</h1>
+          <p className="mt-4 max-w-3xl text-base text-slate-200/90 sm:text-lg">{event.desc}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
@@ -327,7 +327,7 @@ function EventDetail() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-14">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
             <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/30">
@@ -375,14 +375,14 @@ function EventDetail() {
 
             <div
               id="event-booking-form"
-              className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 shadow-lg shadow-black/30"
+              className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-5 shadow-lg shadow-black/30 sm:p-6"
             >
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
                     Book This Event
                   </p>
-                  <h2 className="mt-2 text-3xl font-semibold text-white">
+                  <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">
                     Send your booking request for admin approval
                   </h2>
                   <p className="mt-2 max-w-2xl text-sm text-slate-300">

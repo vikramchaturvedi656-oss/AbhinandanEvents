@@ -215,13 +215,13 @@ function PlannerMarketplaceSection({ id = "planner-marketplace" }) {
 
   return (
     <section id={id} className="bg-slate-900/40 border-y border-white/5">
-      <div className="mx-auto max-w-7xl px-5 py-16">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-5 sm:py-16">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
               Planner Marketplace
             </p>
-            <h2 className="mt-2 text-3xl font-bold text-white md:text-4xl">
+            <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
               Book trusted planners with visible cards and live availability checks.
             </h2>
             <p className="mt-3 max-w-3xl text-slate-300">
@@ -403,8 +403,8 @@ function PlannerMarketplaceSection({ id = "planner-marketplace" }) {
           </div>
 
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-[2rem] border border-white/10 bg-slate-950/85 p-6">
-              <h3 className="text-2xl font-semibold text-white">
+            <div className="rounded-[2rem] border border-white/10 bg-slate-950/85 p-5 sm:p-6">
+              <h3 className="text-xl font-semibold text-white sm:text-2xl">
                 {selectedPlanner ? selectedPlanner.name : "Select a planner card"}
               </h3>
               <p className="mt-2 text-sm text-slate-300">

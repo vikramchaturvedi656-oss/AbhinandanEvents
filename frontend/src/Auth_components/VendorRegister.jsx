@@ -117,10 +117,10 @@ function VendorRegister() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex justify-center items-center">
-      <div className="bg-zinc-900 p-10 rounded-xl w-[420px]">
+    <div className="flex min-h-screen items-center justify-center bg-black px-4 py-8 text-white">
+      <div className="w-full max-w-md rounded-xl bg-zinc-900 p-6 sm:p-10">
 
-        <h2 className="text-3xl font-bold mb-6 text-center">
+        <h2 className="mb-6 text-center text-2xl font-bold sm:text-3xl">
           Vendor Registration
         </h2>
 

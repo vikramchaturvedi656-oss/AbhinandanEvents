@@ -2,11 +2,11 @@ import React from "react";
 
 const Contact = () => {
   return (
-    <div className="text-white p-10">
+    <div className="px-4 py-10 text-white sm:px-6 sm:py-14">
 
-      <h1 className="text-4xl font-bold text-center mb-10">Contact Us</h1>
+      <h1 className="mb-10 text-center text-3xl font-bold sm:text-4xl">Contact Us</h1>
 
-      <div className="max-w-xl mx-auto">
+      <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-slate-900/60 p-5 sm:p-8">
 
         <input className="input" placeholder="Your Name" />
         <input className="input" placeholder="Email" />
@@ -17,7 +17,7 @@ const Contact = () => {
           placeholder="Your Message"
         ></textarea>
 
-        <button className="bg-pink-500 px-6 py-3 rounded-lg w-full hover:bg-pink-600">
+        <button className="w-full rounded-lg bg-pink-500 px-6 py-3 hover:bg-pink-600">
           Send Message
         </button>
 

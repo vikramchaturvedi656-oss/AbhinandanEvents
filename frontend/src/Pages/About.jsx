@@ -2,11 +2,11 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="text-white p-10">
+    <div className="mx-auto max-w-6xl px-4 py-10 text-white sm:px-6 sm:py-14">
 
-      <h1 className="text-4xl font-bold mb-6 text-center">About Us</h1>
+      <h1 className="mb-6 text-center text-3xl font-bold sm:text-4xl">About Us</h1>
 
-      <p className="text-center max-w-3xl mx-auto mb-10 text-gray-300">
+      <p className="mx-auto mb-10 max-w-3xl text-center text-sm text-gray-300 sm:text-base">
         Abhinandan Events is a professional event planning platform that helps
         people organize weddings, birthday parties, corporate events and many
         other celebrations with trusted planners, decorators and vendors.
@@ -15,22 +15,22 @@ const About = () => {
 
       {/* TEAM SECTION */}
 
-      <h2 className="text-3xl font-semibold text-center mb-10">
+      <h2 className="mb-10 text-center text-2xl font-semibold sm:text-3xl">
         Meet Our Team
       </h2>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
         {/* CEO */}
 
-        <div className="bg-[#1e293b] p-6 rounded-xl text-center hover:scale-105 transition">
+        <div className="rounded-xl bg-[#1e293b] p-6 text-center transition hover:scale-105">
 
           <img
-            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e"
-            className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+            src="https://avatars.githubusercontent.com/u/166223452?s=400&u=fac6caef71d18d34f5799d8deacb7e77059152de&v=4"
+            className="mx-auto mb-4 h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
           />
 
-          <h2 className="text-xl font-bold">Shivam Singh</h2>
+          <h2 className="text-xl font-bold">Altamash Malik</h2>
 
           <p className="text-pink-400">Founder & CEO</p>
 
@@ -43,40 +43,20 @@ const About = () => {
 
         {/* Event Manager */}
 
-        <div className="bg-[#1e293b] p-6 rounded-xl text-center hover:scale-105 transition">
+        <div className="rounded-xl bg-[#1e293b] p-6 text-center transition hover:scale-105">
 
           <img
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330"
-            className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+            src="https://avatars.githubusercontent.com/u/230208633?v=4"
+            className="mx-auto mb-4 h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
           />
 
-          <h2 className="text-xl font-bold">Ananya Sharma</h2>
+          <h2 className="text-xl font-bold">Vikram Kumar Chaturvedi</h2>
 
           <p className="text-pink-400">Event Director</p>
 
           <p className="text-gray-400 text-sm mt-2">
             Expert in organizing weddings, corporate events and
             large-scale celebrations.
-          </p>
-
-        </div>
-
-        {/* Creative Head */}
-
-        <div className="bg-[#1e293b] p-6 rounded-xl text-center hover:scale-105 transition">
-
-          <img
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
-            className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-          />
-
-          <h2 className="text-xl font-bold">Rahul Verma</h2>
-
-          <p className="text-pink-400">Creative Head</p>
-
-          <p className="text-gray-400 text-sm mt-2">
-            Designs event themes, decorations and creative concepts
-            for unforgettable experiences.
           </p>
 
         </div>

@@ -4,12 +4,12 @@ import PlannerMarketplaceSection from "../components/PlannerMarketplaceSection";
 function MarketplaceHome() {
   return (
     <div className="bg-slate-950 text-slate-50">
-      <section className="mx-auto max-w-7xl px-5 py-12">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-5 sm:py-12">
+        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.3em] text-amber-300">
             Planner Marketplace
           </p>
-          <h1 className="mt-3 text-4xl font-semibold text-white md:text-5xl">
+          <h1 className="mt-3 text-3xl font-semibold text-white sm:text-4xl md:text-5xl">
             Discover planners, check live availability, and confirm bookings in
             one flow.
           </h1>

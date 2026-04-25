@@ -10,12 +10,43 @@ font-family:'Space Grotesk','Segoe UI',sans-serif;
 margin:0;
 padding:0;
 line-height:1.6;
+overflow-x:hidden;
+min-width:320px;
+}
+
+*,
+*::before,
+*::after{
+box-sizing:border-box;
+}
+
+img,
+video,
+canvas,
+svg,
+iframe{
+max-width:100%;
 }
 
 /* Container spacing */
 
 .section{
 padding:80px 40px;
+}
+
+@media (max-width: 640px){
+.section{
+padding:56px 20px;
+}
+
+.title{
+font-size:28px;
+margin-bottom:28px;
+}
+
+.form-box{
+padding:20px;
+}
 }
 
 /* Form Inputs */

@@ -184,15 +184,15 @@ function MainHome() {
           <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950/80 to-slate-900" />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-6 py-20 lg:py-28">
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-28">
           <p className="mb-4 text-xs uppercase tracking-[0.3em] text-amber-300">
             Abhinandan Events | Home + Marketplace Combined
           </p>
-          <h1 className="max-w-4xl text-4xl font-bold leading-tight md:text-5xl">
+          <h1 className="max-w-4xl text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
             Centralized, transparent event planning with the full homepage and
             the newer booking experience together.
           </h1>
-          <p className="mt-5 max-w-3xl text-lg text-slate-200/90">
+          <p className="mt-5 max-w-3xl text-base text-slate-200/90 sm:text-lg">
             Explore event cards, compare planners, request services, and keep
             the updated live-booking flow on the same home page.
           </p>
@@ -232,7 +232,7 @@ function MainHome() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-3xl font-bold">Why organizers choose us</h2>
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-200">
@@ -256,7 +256,7 @@ function MainHome() {
       </section>
 
       <section className="border-y border-white/5 bg-slate-900/50">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
@@ -291,7 +291,7 @@ function MainHome() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
@@ -351,7 +351,7 @@ function MainHome() {
       <PlannerMarketplaceSection />
 
       <section id="request-form" className="border-y border-white/5 bg-slate-900/50">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="grid items-start gap-10 lg:grid-cols-2">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
@@ -501,7 +501,7 @@ function MainHome() {
       </section>
 
       <section className="border-y border-white/5 bg-slate-900/50">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-3xl font-bold">Roadmap highlights</h2>
             <span className="text-xs text-slate-300">
@@ -526,7 +526,7 @@ function MainHome() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-3xl font-bold">What our community says</h2>
           <span className="text-sm text-slate-300">
@@ -548,11 +548,11 @@ function MainHome() {
       </section>
 
       <section className="bg-gradient-to-r from-amber-500 via-rose-500 to-fuchsia-600 text-slate-50">
-        <div className="mx-auto max-w-6xl px-6 py-16 text-center">
-          <h2 className="text-3xl font-bold md:text-4xl">
+        <div className="mx-auto max-w-6xl px-4 py-12 text-center sm:px-6 sm:py-16">
+          <h2 className="text-2xl font-bold sm:text-3xl md:text-4xl">
             Ready to plan without the chaos?
           </h2>
-          <p className="mx-auto mt-3 max-w-3xl text-lg">
+          <p className="mx-auto mt-3 max-w-3xl text-base sm:text-lg">
             Join Abhinandan Events to centralize vendor discovery, pricing
             clarity, coordination, and live planner booking.
           </p>
