@@ -34,6 +34,10 @@ const adminSchema = new mongoose.Schema(
         enum: ["MANAGE_USERS", "MANAGE_VENDORS", "MANAGE_ADMINS"],
       },
     ],
+    profileImage: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

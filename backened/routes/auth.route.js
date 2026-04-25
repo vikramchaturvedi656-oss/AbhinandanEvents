@@ -3,10 +3,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../models/admin.model.js";
 import User from "../models/user.model.js";
-import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
+import { requireAuth } from "../middleware/auth.middleware.js";
+import generateTokenAndSetCookie, {
+  getAuthCookieOptions,
+} from "../utils/generateTokenAndSetCookie.js";
 import ensureAdminAccounts from "../utils/ensureAdminAccounts.js";
 
 const router = express.Router();
+const MAX_PROFILE_IMAGE_BYTES = 3 * 1024 * 1024;
 
 const normalizeLoginRole = (value = "") => {
   const normalizedValue = String(value).trim().toLowerCase();
@@ -39,6 +43,31 @@ const verifyPassword = async (plainPassword, storedPassword) => {
 
   return String(plainPassword) === String(storedPassword);
 };
+
+const serializeUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  phone: user.phone,
+  role: user.role,
+  isVerified: user.isVerified,
+  createdAt: user.createdAt,
+  profileImage: user.profileImage || "",
+});
+
+const serializeAdmin = (admin) => ({
+  id: admin._id,
+  name: admin.name,
+  email: admin.email,
+  phone: admin.phone,
+  role: "Admin",
+  permissions: admin.permissions,
+  createdAt: admin.createdAt,
+  profileImage: admin.profileImage || "",
+});
+
+const isValidProfileImage = (value = "") =>
+  /^data:image\/(?:png|jpeg|webp);base64,/i.test(value);
 
 router.post("/signup", async (req, res) => {
   try {
@@ -77,13 +106,7 @@ router.post("/signup", async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully!",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-      },
+      user: serializeUser(user),
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -153,13 +176,7 @@ router.post("/login", async (req, res) => {
 
       return res.status(200).json({
         message: "Admin login successful.",
-        user: {
-          id: admin._id,
-          name: admin.name,
-          email: admin.email,
-          phone: admin.phone,
-          role: "Admin",
-        },
+        user: serializeAdmin(admin),
       });
     }
 
@@ -193,13 +210,7 @@ router.post("/login", async (req, res) => {
 
     res.status(200).json({
       message: "Login successful.",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-      },
+      user: serializeUser(user),
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -208,11 +219,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", (_req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
+  res.clearCookie("token", getAuthCookieOptions());
 
   res.json({ message: "Logged out successfully." });
 });
@@ -228,7 +235,7 @@ router.get("/me", async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded.principalType === "admin" && decoded.adminId) {
       const admin = await Admin.findById(decoded.adminId).select(
-        "name email phone permissions isActive createdAt"
+        "name email phone permissions isActive createdAt profileImage"
       );
 
       if (!admin || !admin.isActive) {
@@ -236,20 +243,12 @@ router.get("/me", async (req, res) => {
       }
 
       return res.json({
-        user: {
-          id: admin._id,
-          name: admin.name,
-          email: admin.email,
-          phone: admin.phone,
-          role: "Admin",
-          permissions: admin.permissions,
-          createdAt: admin.createdAt,
-        },
+        user: serializeAdmin(admin),
       });
     }
 
     const user = await User.findById(decoded.userId).select(
-      "name email phone role isVerified createdAt"
+      "name email phone role isVerified createdAt profileImage"
     );
 
     if (!user) {
@@ -257,19 +256,77 @@ router.get("/me", async (req, res) => {
     }
 
     res.json({
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        isVerified: user.isVerified,
-        createdAt: user.createdAt,
-      },
+      user: serializeUser(user),
     });
   } catch (error) {
     console.error("Auth check error:", error);
     res.status(401).json({ message: "Unauthorized." });
+  }
+});
+
+router.patch("/me/profile-image", requireAuth, async (req, res) => {
+  try {
+    const { profileImage = "" } = req.body;
+
+    if (profileImage && !isValidProfileImage(profileImage)) {
+      return res.status(400).json({
+        message: "Please upload a PNG, JPEG, or WEBP image.",
+      });
+    }
+
+    if (
+      profileImage &&
+      Buffer.byteLength(profileImage, "utf8") > MAX_PROFILE_IMAGE_BYTES
+    ) {
+      return res.status(413).json({
+        message: "Profile image is too large. Please upload an image under 2MB.",
+      });
+    }
+
+    if (req.user.role === "Admin") {
+      const admin = await Admin.findByIdAndUpdate(
+        req.user.id,
+        { profileImage },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).select("name email phone permissions isActive createdAt profileImage");
+
+      if (!admin || !admin.isActive) {
+        return res.status(404).json({ message: "Admin account not found." });
+      }
+
+      return res.json({
+        message: profileImage
+          ? "Profile photo updated successfully."
+          : "Profile photo removed successfully.",
+        user: serializeAdmin(admin),
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id || req.user.id,
+      { profileImage },
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).select("name email phone role isVerified createdAt profileImage");
+
+    if (!user) {
+      return res.status(404).json({ message: "User account not found." });
+    }
+
+    return res.json({
+      message: profileImage
+        ? "Profile photo updated successfully."
+        : "Profile photo removed successfully.",
+      user: serializeUser(user),
+    });
+  } catch (error) {
+    console.error("Profile image update error:", error);
+    res.status(500).json({ message: "Unable to update profile image right now." });
   }
 });
 

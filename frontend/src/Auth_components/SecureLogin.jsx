@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../utils/config";
-import { getDashboardPath } from "../utils/session";
+import { authApi } from "../utils/api";
+import { getDashboardPath, saveStoredUser } from "../utils/session";
 
 function SecureLogin() {
   const navigate = useNavigate();
@@ -56,22 +56,7 @@ function SecureLogin() {
         role: formData.loginType,
       };
 
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "Login failed.");
-        return;
-      }
-
+      const { data } = await authApi.login(payload);
       const user = data.user || data;
 
       if (!user?.email) {
@@ -79,17 +64,11 @@ function SecureLogin() {
         return;
       }
 
-      localStorage.setItem("ae_user", JSON.stringify(user));
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-
-      window.dispatchEvent(new Event("userLogin"));
+      saveStoredUser(user);
       navigate(getDashboardPath(user.role));
     } catch (error) {
       console.error("Login error:", error);
-      setError("Server error. Please try again later.");
+      setError(error.response?.data?.message || "Server error. Please try again later.");
     } finally {
       setLoading(false);
     }

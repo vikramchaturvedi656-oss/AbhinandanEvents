@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
+import { authApi } from "../utils/api";
 import {
   clearStoredUser,
   getDashboardPath,
   getStoredUser,
+  saveStoredUser,
 } from "../utils/session";
 
 function SiteNavbar() {
@@ -24,6 +26,51 @@ function SiteNavbar() {
       window.removeEventListener("storage", syncUser);
     };
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateUser = async () => {
+      try {
+        const { data } = await authApi.getCurrentUser();
+
+        if (!isMounted) {
+          return;
+        }
+
+        saveStoredUser(data.user);
+        setUser(data.user);
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        if (error.response?.status === 401) {
+          clearStoredUser();
+          setUser(null);
+        }
+      }
+    };
+
+    hydrateUser();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      clearStoredUser();
+      setUser(null);
+      setMenuOpen(false);
+      navigate("/");
+    }
+  };
 
   const dashboardPath = user ? getDashboardPath(user.role) : "/dashboard";
   const navLinkClass = (path) =>
@@ -71,9 +118,17 @@ function SiteNavbar() {
             onClick={() => setMenuOpen((current) => !current)}
             className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 font-semibold text-slate-950">
-              {user?.name?.[0]?.toUpperCase() || "G"}
-            </span>
+            {user?.profileImage ? (
+              <img
+                src={user.profileImage}
+                alt={user.name || "User"}
+                className="h-9 w-9 rounded-full object-cover"
+              />
+            ) : (
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 font-semibold text-slate-950">
+                {user?.name?.[0]?.toUpperCase() || "G"}
+              </span>
+            )}
             <span className="hidden text-left sm:block">
               <span className="block font-medium">
                 {user?.name || "Guest access"}
@@ -116,12 +171,7 @@ function SiteNavbar() {
                     </Link>
                     <button
                       type="button"
-                      onClick={() => {
-                        clearStoredUser();
-                        setUser(null);
-                        setMenuOpen(false);
-                        navigate("/");
-                      }}
+                      onClick={handleLogout}
                       className="w-full rounded-xl px-3 py-2 text-left text-rose-300 hover:bg-rose-500/10"
                     >
                       Logout

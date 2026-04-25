@@ -7,6 +7,11 @@ export const getStoredUser = () => {
   }
 };
 
+export const saveStoredUser = (user) => {
+  localStorage.setItem("ae_user", JSON.stringify(user));
+  window.dispatchEvent(new Event("userLogin"));
+};
+
 export const clearStoredUser = () => {
   localStorage.removeItem("ae_user");
   localStorage.removeItem("token");

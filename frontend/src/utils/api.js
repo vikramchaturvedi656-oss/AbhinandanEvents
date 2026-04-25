@@ -41,4 +41,12 @@ export const adminApi = {
     API.patch(`/admin/event-requests/${requestId}/status`, payload),
 };
 
+export const authApi = {
+  signup: (payload) => API.post("/auth/signup", payload),
+  login: (payload) => API.post("/auth/login", payload),
+  logout: () => API.post("/auth/logout"),
+  getCurrentUser: () => API.get("/auth/me"),
+  updateProfileImage: (payload) => API.patch("/auth/me/profile-image", payload),
+};
+
 export default API;

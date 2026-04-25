@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../utils/config";
+import { authApi } from "../utils/api";
 
 function SecureSignup() {
   const navigate = useNavigate();
@@ -43,33 +43,21 @@ function SecureSignup() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          password: formData.password,
-          role: formData.role,
-        }),
+      await authApi.signup({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        role: formData.role,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "Signup failed. Please try again.");
-        return;
-      }
 
       setSuccess("Account created successfully! Redirecting to login...");
 
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-    } catch {
-      setError("Server error. Please try again later.");
+    } catch (error) {
+      setError(error.response?.data?.message || "Server error. Please try again later.");
     } finally {
       setLoading(false);
     }

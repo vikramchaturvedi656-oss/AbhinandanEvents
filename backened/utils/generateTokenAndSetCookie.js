@@ -1,6 +1,18 @@
 // utils/generateTokenAndSetCookie.js
 import jwt from "jsonwebtoken";
 
+export const getAuthCookieOptions = (overrides = {}) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+    ...overrides,
+  };
+};
+
 /**
  * Generates a JWT token and sets it as an HTTP-only cookie.
  * @param {Object} res - Express response object
@@ -23,12 +35,13 @@ const generateTokenAndSetCookie = (res, subject, options = {}) => {
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: cookieMaxAge,
-  });
+  res.cookie(
+    "token",
+    token,
+    getAuthCookieOptions({
+      maxAge: cookieMaxAge,
+    })
+  );
 
   return token;
 };
